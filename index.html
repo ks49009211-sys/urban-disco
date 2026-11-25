@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Maaru ke liye ❤️</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --night:#2a0f33; --plum:#431a4f; --rose:#ff5c8a; --blush:#ffd9e3; --gold:#f5c76b;
+  --hand:'Caveat','Segoe Print','Comic Sans MS',cursive; --body:'Nunito',system-ui,sans-serif;
+  color-scheme:dark; box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;background:var(--night);color:var(--blush);font-family:var(--body);overflow:hidden}
+body{background:radial-gradient(120% 80% at 50% 0%,var(--plum),var(--night) 70%)}
+.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px;max-width:480px;margin:0 auto}
+.screen.on{display:flex}
+h1,h2{font-family:var(--hand);font-weight:700;margin:0 0 10px;line-height:1.05;color:#fff}
+h1{font-size:3.4rem} h2{font-size:2.4rem}
+p{font-size:1.05rem;line-height:1.5;margin:0 0 18px;max-width:34ch}
+button{font:700 1.1rem var(--body);border:0;border-radius:999px;padding:14px 30px;background:var(--rose);color:#fff;cursor:pointer;touch-action:manipulation}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+button:active{transform:scale(.96)}
+.gold{background:var(--gold);color:var(--night)}
+.big{font-size:5rem;line-height:1;margin-bottom:12px}
+#bar{width:78%;height:10px;border-radius:9px;background:rgba(255,255,255,.14);overflow:hidden;margin:8px 0}
+#fill{height:100%;width:0;background:linear-gradient(90deg,var(--rose),var(--gold));transition:width .25s}
+#play{position:relative;width:100%;flex:1;overflow:hidden;touch-action:manipulation}
+.h{position:absolute;top:-12%;font-size:2.6rem;user-select:none;cursor:pointer;animation:fall linear forwards;padding:8px}
+@keyframes fall{to{top:104%}}
+.pop{animation:pop .25s forwards!important}
+@keyframes pop{to{transform:scale(1.8);opacity:0}}
+.opts{display:flex;flex-direction:column;gap:12px;width:100%;max-width:340px}
+.opts button{background:rgba(255,255,255,.1);border:2px solid rgba(255,217,227,.35);color:#fff}
+.opts button.bad{border-color:var(--rose);animation:shake .3s}
+@keyframes shake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+#msg{min-height:1.6em;color:var(--gold);font-weight:700;margin-top:14px}
+#box{font-size:7rem;line-height:1;cursor:pointer;background:none;padding:0;animation:wob 1.2s infinite}
+@keyframes wob{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+.card{background:linear-gradient(160deg,#fff,var(--blush));color:var(--night);border-radius:22px;padding:26px 22px;border:3px solid var(--gold);box-shadow:0 14px 40px rgba(0,0,0,.45);width:100%}
+.card h2{color:var(--night)}
+.card p{color:#4a2a55;margin:0 auto 14px}
+.row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:6px}
+.no{background:#e9d3dc;color:var(--night)}
+.conf{position:fixed;top:-8%;font-size:2rem;pointer-events:none;animation:fall linear forwards;z-index:9}
+#mute{position:fixed;right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);z-index:20;width:44px;height:44px;padding:0;font-size:1.3rem;background:rgba(255,255,255,.14)}
+#nomsg{min-height:1.5em;margin:12px 0 0;color:#b0224f;font-weight:700}
+#yes{transition:transform .2s}
+@media (prefers-reduced-motion:reduce){#box{animation:none}.h{animation-duration:9s!important}}
+</style>
+</head>
+<body>
+
+<button id="mute" aria-label="Sound on/off">🔊</button>
+<section class="screen on" id="s0">
+  <div class="big">💌</div>
+  <h1>Maaru ❤️</h1>
+  <p>Tere liye ek chhota sa game banaya hai. Jeetegi toh ek special reward milega.</p>
+  <button id="start">Game shuru karo</button>
+</section>
+
+<section class="screen" id="s1" style="justify-content:flex-start;padding-top:28px">
+  <h2>Level 1: Dil pakdo</h2>
+  <p style="margin-bottom:4px">10 ❤️ pakdo. 💔 se bachna!</p>
+  <div id="bar"><div id="fill"></div></div>
+  <div id="play" aria-label="Game area"></div>
+</section>
+
+<section class="screen" id="s2">
+  <h2 id="qt"></h2>
+  <p id="qs" style="margin-bottom:14px"></p>
+  <div class="opts" id="opts"></div>
+  <div id="msg"></div>
+</section>
+
+<section class="screen" id="s3">
+  <h2>Level 3 paar! 🎉</h2>
+  <p>Reward ready hai. Box ko 3 baar tap karo.</p>
+  <button id="box" aria-label="Reward box kholo">🎁</button>
+  <div id="msg3" style="margin-top:10px;color:var(--gold);font-weight:700;min-height:1.5em"></div>
+</section>
+
+<section class="screen" id="s4">
+  <div class="card">
+    <div class="big" style="font-size:3.6rem">💍</div>
+    <h2>Tera reward: Kamlesh</h2>
+    <p>Maaru, tu meri life ka sabse pyaara game hai. Har level haarne ko tayyar hoon, bas tujhe jeetna hai.</p>
+    <p><b>Kya tu meri wife banegi?</b></p>
+    <div class="row">
+      <button id="yes">Haan ❤️</button>
+      <button id="no" class="no">Nahi</button>
+    </div>
+    <div id="nomsg"></div>
+  </div>
+</section>
+
+<section class="screen" id="s5">
+  <div class="big">💞</div>
+  <h1>Maaru + Kamlesh</h1>
+  <p>Pata tha tu haan bolegi. Ab game khatam, asli zindagi shuru. Love you, hamesha. 💍</p>
+</section>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)};
+
+  // ---- Sound ----
+  var AC=null,master=null,muted=false,music=null,step=0;
+  function ac(){
+    if(!AC){var C=window.AudioContext||window.webkitAudioContext;if(!C)return null;
+      AC=new C();master=AC.createGain();master.gain.value=.9;master.connect(AC.destination)}
+    if(AC.state==='suspended')AC.resume();
+    return AC;
+  }
+  function tone(f,t0,d,type,vol,f2){
+    if(muted)return;var a=ac();if(!a)return;
+    var o=a.createOscillator(),g=a.createGain(),s=a.currentTime+(t0||0);
+    o.type=type||'sine';o.frequency.setValueAtTime(f,s);
+    if(f2)o.frequency.exponentialRampToValueAtTime(f2,s+d);
+    g.gain.setValueAtTime(.0001,s);g.gain.exponentialRampToValueAtTime(vol||.2,s+.015);
+    g.gain.exponentialRampToValueAtTime(.0001,s+d);
+    o.connect(g);g.connect(master);o.start(s);o.stop(s+d+.05);
+  }
+  var sfx={
+    catchH:function(){tone(880,0,.12,'triangle',.25);tone(1318,.07,.18,'triangle',.22)},
+    bad:function(){tone(300,0,.3,'sawtooth',.18,90)},
+    ok:function(){tone(523,0,.15,'triangle',.25);tone(659,.1,.15,'triangle',.25);tone(784,.2,.25,'triangle',.25)},
+    wrong:function(){tone(220,0,.25,'square',.12,150)},
+    box:function(n){tone(440*Math.pow(1.26,n),0,.2,'triangle',.3);tone(660*Math.pow(1.26,n),.08,.2,'sine',.2)},
+    boing:function(){tone(250,0,.28,'sine',.3,700)},
+    win:function(){[523,659,784,1047,784,1047,1319].forEach(function(f,i){tone(f,i*.14,.35,'triangle',.28)})}
+  };
+  // soft music-box loop
+  var mel=[659,784,880,784,659,523,587,659, 784,880,1047,880,784,659,587,523, 659,784,880,1047,880,784,659,587, 523,587,659,587,523,440,523,0];
+  var bass=[262,262,330,330,349,349,262,196];
+  function startMusic(){
+    if(music||!ac())return;
+    music=setInterval(function(){
+      if(muted||document.hidden)return;
+      var n=mel[step%mel.length];
+      if(n)tone(n,0,.7,'sine',.07);
+      if(step%4===0)tone(bass[(step/4)%bass.length|0],0,1.4,'triangle',.05);
+      step++;
+    },380);
+  }
+  $('mute').onclick=function(){
+    muted=!muted;$('mute').textContent=muted?'🔇':'🔊';
+    if(!muted){ac();startMusic()}
+  };
+  function show(n){
+    for(var i=0;i<=5;i++){$('s'+i).classList.toggle('on',i===n)}
+  }
+
+  // Level 1
+  var score=0,GOAL=10,spawner=null,play=$('play');
+  function spawn(){
+    var bad=Math.random()<0.2;
+    var el=document.createElement('div');
+    el.className='h';
+    el.textContent=bad?'💔':(Math.random()<.5?'❤️':'💖');
+    el.style.left=(Math.random()*80+4)+'%';
+    el.style.animationDuration=(3+Math.random()*2.2)+'s';
+    el.addEventListener('pointerdown',function(){
+      if(el.classList.contains('pop'))return;
+      el.classList.add('pop');
+      score=Math.max(0,score+(bad?-1:1));if(bad)sfx.bad();else sfx.catchH();
+      $('fill').style.width=(score/GOAL*100)+'%';
+      setTimeout(function(){el.remove()},250);
+      if(score>=GOAL){clearInterval(spawner);setTimeout(function(){play.innerHTML='';startQuiz()},400)}
+    });
+    el.addEventListener('animationend',function(){el.remove()});
+    play.appendChild(el);
+  }
+  $('start').onclick=function(){
+    ac();startMusic();sfx.ok();show(1);score=0;$('fill').style.width='0';
+    spawner=setInterval(spawn,650);
+  };
+
+  // Level 2
+  var Q=[
+    {t:'Kamlesh ka favourite insaan kaun hai?',s:'Dhyan se socho.',o:['Maaru','Maaru 😍','Sirf Maaru'],a:[0,1,2],ok:'Sab options mein Maaru hi thi 😜'},
+    {t:'Kamlesh tumse kitna pyaar karta hai?',s:'Sahi jawab chuno.',o:['Thoda sa','Bahut','Gold se bhi zyada, 999 pure'],a:[2],ok:'Bilkul sahi! 999 pure ✨'}
+  ];
+  var qi=0;
+  function startQuiz(){qi=0;show(2);ask()}
+  function ask(){
+    var q=Q[qi];
+    $('qt').textContent='Level 2: Sawal '+(qi+1);
+    $('qs').textContent=q.t;
+    $('msg').textContent='';
+    var box=$('opts');box.innerHTML='';
+    q.o.forEach(function(txt,i){
+      var b=document.createElement('button');
+      b.textContent=txt;
+      b.onclick=function(){
+        if(q.a.indexOf(i)>-1){
+          $('msg').textContent=q.ok;sfx.ok();
+          setTimeout(function(){
+            qi++;
+            if(qi<Q.length){ask()}else{show(3)}
+          },1300);
+        }else{
+          b.classList.remove('bad');void b.offsetWidth;b.classList.add('bad');
+          $('msg').textContent='Hmm 😒 phir se socho';sfx.wrong();
+        }
+      };
+      box.appendChild(b);
+    });
+  }
+
+  // Level 3
+  var taps=0,lines=['Ek aur...','Bas ek aur!','Khul gaya! 🎉'];
+  $('box').onclick=function(){
+    $('msg3').textContent=lines[taps];sfx.box(taps);
+    taps++;
+    if(taps>=3){setTimeout(function(){show(4)},700)}
+  };
+
+  // Final question
+  function confetti(){
+    var e=['❤️','💖','💍','✨','🌹'];
+    for(var i=0;i<40;i++){
+      var c=document.createElement('div');
+      c.className='conf';
+      c.textContent=e[i%e.length];
+      c.style.left=Math.random()*95+'%';
+      c.style.animationDuration=(2.5+Math.random()*3)+'s';
+      c.style.animationDelay=(Math.random()*1.2)+'s';
+      document.body.appendChild(c);
+      (function(x){x.addEventListener('animationend',function(){x.remove()})})(c);
+    }
+  }
+  var yesDown=false;
+  $('yes').addEventListener('pointerdown',function(){yesDown=true});
+  $('yes').onclick=function(ev){
+    var ok=yesDown||ev.detail===0;yesDown=false;
+    if(!ok||Date.now()-last<700)return;
+    sfx.win();show(5);confetti();setTimeout(confetti,2500)
+  };
+  var no=$('no'),tries=0,last=0;
+  var nomsgs=['Arre, galti se dabaya? 😏','Sach mein? Phir se soch le 🥺','Nahi button kharab hai 😜','Dekh, Haan bada ho raha hai 👀','Kamlesh ro dega... 😭','Ek hi sahi jawab hai ❤️','Ab bas kar, Haan dabaa de 💍','Last chance... 😤'];
+  function dodge(ev){
+    ev.preventDefault();
+    var now=Date.now();if(now-last<350)return;last=now;
+    tries++;sfx.boing();
+    $('nomsg').textContent=tries>8?'Ab koi option bacha hi nahi 😜 Haan dabao!':nomsgs[tries-1];
+    $('yes').style.transform='scale('+Math.min(1+tries*.12,2)+')';
+    $('yes').style.margin=(tries*3)+'px';
+    if(tries>8){no.style.display='none';return}
+    if(!no.dataset.ph){
+      var ph=document.createElement('span');
+      ph.style.cssText='display:inline-block;width:'+no.offsetWidth+'px;height:'+no.offsetHeight+'px';
+      no.parentNode.insertBefore(ph,no);no.dataset.ph='1';
+    }
+    no.style.position='fixed';
+    no.style.left=Math.max(8,Math.random()*(window.innerWidth-110))+'px';
+    no.style.top=Math.max(60,Math.random()*(window.innerHeight-60))+'px';
+  }
+  no.addEventListener('pointerenter',dodge);
+  no.addEventListener('pointerdown',dodge);
+})();
+</script>
+</body>
+        </html>
